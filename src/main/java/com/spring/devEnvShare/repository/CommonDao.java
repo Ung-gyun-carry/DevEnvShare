@@ -17,4 +17,8 @@ public class CommonDao {
     public List<Map<String, Object>> selectList(String statement, Map<String, Object> parameter) {
         return session.selectList(statement, parameter);
     }
+
+    public Map<String, Object> selectOne(String statement, Map<String, Object> parameter) {
+        return session.selectOne(statement, parameter);
+    }
 }

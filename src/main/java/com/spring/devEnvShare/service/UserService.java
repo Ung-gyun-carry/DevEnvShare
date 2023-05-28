@@ -12,10 +12,10 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class CommonService {
+public class UserService {
     private final CommonDao dao;
 
-    public List<Map<String, Object>> userList() {
-        return dao.selectList("common.selectUsers", null);
+    public Map<String, Object> loginUser(Map paramMap) {
+        return dao.selectOne("user.loginUser", paramMap);
     }
 }
