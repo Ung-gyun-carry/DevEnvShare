@@ -1,10 +1,69 @@
-<!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Home</title>
+    <link rel="stylesheet" href="/node_modules/tui-time-picker/dist/tui-time-picker.css">
+    <link rel="stylesheet" href="/node_modules/tui-date-picker/dist/tui-date-picker.css">
+    <link rel="stylesheet" href="/node_modules/tui-grid/dist/tui-grid.css">
+    <link rel="stylesheet" href="/node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <script src="/node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="/node_modules/tui-code-snippet/dist/tui-code-snippet.min.js"></script>
+    <script src="/node_modules/tui-time-picker/dist/tui-time-picker.min.js"></script>
+    <script src="/node_modules/tui-date-picker/dist/tui-date-picker.min.js"></script>
+    <script src="/node_modules/tui-grid/dist/tui-grid.js"></script>
+
 </head>
+<script>
+    var grid;
+    window.onload = function() {
+
+        grid = new tui.Grid({
+            el: document.getElementById('grid'),
+            //data: gridData,
+            scrollX: false,
+            scrollY: false,
+            columns: [
+                {
+                    header: 'USER_ID',
+                    name: 'USER_ID'
+                },
+                {
+                    header: 'USER_PW',
+                    name: 'USER_PW'
+                },
+                {
+                    header: 'USER_NAME',
+                    name: 'USER_NAME'
+                },
+                {
+                    header: 'USER_GENDER',
+                    name: 'USER_GENDER'
+                },
+                {
+                    header: 'USER_AGE',
+                    name: 'USER_AGE'
+                }
+            ]
+        });
+
+        $.ajax({
+            url : "userList",
+            method : "get",
+            dataType : "JSON",
+            data : {},
+            error : function() {alert("똑바로 안 했!!!")},
+            success : function(result) {
+                grid.resetData(result);
+                /*
+                for(var i = 0; i < result.length; i++) {
+                    var member = result[i];
+                    $('#grid').append(member.NAME + "<br>");
+                }
+                 */
+            }
+        });
+    }
+</script>
 <body>
-        aaadadsdsdab
+<div id="grid"></div>
 </body>
 </html>
