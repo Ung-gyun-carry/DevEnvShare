@@ -48,5 +48,6 @@ html, body {
 }
 
 #inputBox button {
-    padding: 3px 5px;
+    display: inline-block;
+    width: 45%;
 }

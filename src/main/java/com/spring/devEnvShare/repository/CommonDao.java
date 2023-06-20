@@ -21,4 +21,8 @@ public class CommonDao {
     public Map<String, Object> selectOne(String statement, Map<String, Object> parameter) {
         return session.selectOne(statement, parameter);
     }
+
+    public int insert(String statement, Map<String, Object> parameter) {
+        return session.insert(statement, parameter);
+    }
 }

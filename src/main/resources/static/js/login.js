@@ -22,7 +22,7 @@ $(document).ready(function () {
             data: loginObj,
             dataType: "json",
             success: function (data, textStatus, xhr) {
-                if (data.CNT === 0) {
+                if (data.result === false) {
                     swal("로그인 실패", "아이디 혹은 패스워드가 일치하지않습니다.", "warning");
                 } else {
                     swal("로그인 성공", "메인페이지로 이동합니다.", "success");
@@ -33,5 +33,9 @@ $(document).ready(function () {
                 alert("code:" + request.status + "\n" + "error:" + error);
             }
         })
+    });
+
+    $('#regBtn').click(function () {
+        location.href = '/registerForm.html';
     });
 })
