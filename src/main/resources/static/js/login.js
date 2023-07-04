@@ -36,6 +36,10 @@ $(document).ready(function () {
     });
 
     $('#regBtn').click(function () {
-        location.href = '/registerForm.html';
+        location.href = '/user/registerForm';
+    });
+
+    $('#regDevEnvBtn').click(function () {
+        location.href = '/user/registerDevEnvForm';
     });
 })

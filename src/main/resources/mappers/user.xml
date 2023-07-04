@@ -20,4 +20,30 @@
         INSERT INTO USERS (USER_ID, USER_PW, USER_NAME, USER_AGE, USER_GENDER, USER_EMAIL, CREATION_DATE)
         VALUES (#{id}, #{pw}, #{name}, #{age}, #{gender}, #{email}, SYSDATE)
     </insert>
+
+    <select id="selectEquipCombo" resultType="map">
+        /* 장비 콤보 검색 */
+        SELECT EQUIP_NO      /* 장비번호 */
+             , EQUIPMENTS.EQUIP_CATE_NO /* 장비카테고리번호 1: 모니터, 2: 키보드, 3: 마우스, 4: 책상, 5: 의자 */
+             , EQUIPMENTS_CATE.EQUIP_CATE_NM /* 장비명 */
+             , EQUIP_NM      /* 장비명 */
+             , EQUIP_PRICE   /* 장비가격 */
+             , EQUIP_LINK    /* 장비링크 */
+             , TO_CHAR(CREATION_DATE, 'YYYY-MM-DD') CREATION_DATE /* 생성일자 */
+          FROM EQUIPMENTS
+          JOIN EQUIPMENTS_CATE
+            ON EQUIPMENTS.EQUIP_CATE_NO = EQUIPMENTS_CATE.EQUIP_CATE_NO
+         WHERE 1=1
+           AND ROWNUM &lt; 100
+           <if test="equipCateNo != null and equipCateNo != ''">
+           AND EQUIPMENTS.EQUIP_CATE_NO = #{equipCateNo}
+           </if>
+    </select>
+
+    <select id="selectEquipCateCombo" resultType="map">
+        /* 장비카테고리 콤보 검색 */
+        SELECT EQUIP_CATE_NO
+             , EQUIP_CATE_NM
+          FROM EQUIPMENTS_CATE
+    </select>
 </mapper>

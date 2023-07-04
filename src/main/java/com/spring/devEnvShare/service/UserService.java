@@ -13,6 +13,7 @@ import org.thymeleaf.util.StringUtils;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -65,5 +66,13 @@ public class UserService {
         paramMap.put("pw", encoder.encode(paramMap.get("pw").toString()));
         dao.insert("user.registUser", paramMap);
         return resultMap;
+    }
+
+    public List<Map<String, Object>> selectEquipCombo(Map paramMap) {
+        return dao.selectList("user.selectEquipCombo", paramMap);
+    }
+
+    public List<Map<String, Object>> selectEquipCateCombo(Map paramMap) {
+        return dao.selectList("user.selectEquipCateCombo", paramMap);
     }
 }
