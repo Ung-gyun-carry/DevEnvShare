@@ -131,14 +131,18 @@
                 return;
             }
 
-            // 카테고리명이 중복되는게 있을시 추가 불가능
-
-
             let appendData = {
                 EQUIP_CATE_NM: gridMst.getCheckedRows()[0].EQUIP_CATE_NM, /* 카테고리명 */
                 EQUIP_NM: gridMst.getCheckedRows()[0].EQUIP_NM, /* 장비명 */
             };
 
+            // 카테고리명이 중복되는게 있을시 추가 불가능
+            for (let i = 0; i < gridDtl.getData().length; i++) {
+                if (gridDtl.getData()[i].EQUIP_CATE_NM === gridMst.getCheckedRows()[0].EQUIP_CATE_NM) {
+                    swal("Validation", "같은 카테고리가 존재합니다. ", "warning");
+                    return;
+                }
+            }
             // Mst 선택된 행 그리드 Append
             gridDtl.appendRow(appendData);
         });
@@ -153,9 +157,9 @@
 <div id="gridMst" style="width: 80%"></div>
 <div>
     <button type="button" class="btn btn-primary" id="btnDtlAdd">행 추가</button>
+    <button type="button" class="btn btn-primary" id="btnReg">등록</button>
 </div>
 <div id="gridDtl" style="width: 80%"></div>
-
 </body>
 </html>
 </script>
