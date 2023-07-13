@@ -19,10 +19,34 @@
     let gridMst;
     let gridDtl;
     let equipCateOption = '';
+    class CustomTextEditor {
+        constructor(props) {
+            const el = document.createElement('input');
+            const { maxLength } = props.columnInfo.editor.options;
+
+            el.type = 'text';
+            el.maxLength = maxLength;
+            el.value = String(props.value);
+
+            this.el = el;
+        }
+
+        getElement() {
+            return this.el;
+        }
+
+        getValue() {
+            return this.el.value;
+        }
+
+        mounted() {
+            this.el.select();
+        }
+    }
     $(document).ready(function () {
         // 1. 장비종류 콤보박스 데이터베이스에서 끌고오기
         $.ajax({
-            url  : "/user/selectEquipCateCombo",
+            url  : "/equip/selectEquipCateCombo",
             type : "GET",
             contentType : "application/json", // 요청 컨텐트 타입
             dataType    : "json", // 응답 데이터 형식 (명시하지 않을 경우 자동으로 추측)
@@ -84,12 +108,47 @@
             el: document.getElementById('gridDtl'),
             columns: [
                 {
-                    header: 'EQUIP_CATE_NM',
+                    header: '카테고리명',
                     name: 'EQUIP_CATE_NM',
                 },
                 {
-                    header: 'EQUIP_NM',
+                    header: '장비명',
                     name: 'EQUIP_NM',
+                },
+                {
+                    header: '장비평점',
+                    name: 'EQUIP_RATING',
+                    copyOptions: {
+                        useListItemText: true
+                    },
+                    formatter: 'listItemText',
+                    editor: {
+                        type: 'radio',
+                        options: {
+                            listItems: [
+                                { text: '★☆☆☆☆', value: '1' },
+                                { text: '★★☆☆☆', value: '2' },
+                                { text: '★★★☆☆', value: '3' },
+                                { text: '★★★★☆', value: '4' },
+                                { text: '★★★★★', value: '5' },
+                            ]
+                        }
+                    }
+                },
+                {
+                    header: '비고',
+                    name: 'EQUIP_COMMENT',
+                    editor: {
+                        type: CustomTextEditor,
+                        options: {
+                            maxLength: 255
+                        }
+                    }
+                },
+                {
+                    header: '장비번호',
+                    name: 'EQUIP_NO',
+                    hidden: true // 해당 컬럼 숨기기
                 }
             ]
         });
@@ -97,7 +156,7 @@
         $('#searchBtn').click(function () {
             // 1. 장비종류 콤보박스 데이터베이스에서 끌고오기
             $.ajax({
-                url  : "/user/selectEquipCombo",
+                url  : "/equip/selectEquipCombo",
                 type : "GET",
                 data : {
                     // 선택된 카테고리
@@ -132,6 +191,7 @@
             }
 
             let appendData = {
+                EQUIP_NO: gridMst.getCheckedRows()[0].EQUIP_NO, /* 장비번호 */
                 EQUIP_CATE_NM: gridMst.getCheckedRows()[0].EQUIP_CATE_NM, /* 카테고리명 */
                 EQUIP_NM: gridMst.getCheckedRows()[0].EQUIP_NM, /* 장비명 */
             };
@@ -146,6 +206,47 @@
             // Mst 선택된 행 그리드 Append
             gridDtl.appendRow(appendData);
         });
+
+        $('#btnReg').click(function () {
+            if (gridDtl.getData().length === 0) {
+                swal("Validation", "추가된 행이 없습니다.", "warning");
+                return;
+            }
+
+            let gridDtlList = [];
+
+            for (let i = 0; i < gridDtl.getData().length; i++) {
+                let paramObj = {
+                    'EQUIP_NO': gridDtl.getData()[i]['EQUIP_NO'],
+                    'EQUIP_RATING': gridDtl.getData()[i]['EQUIP_RATING'],
+                    'EQUIP_COMMENT': gridDtl.getData()[i]['EQUIP_COMMENT']
+                }
+                gridDtlList.push(paramObj);
+            }
+
+            // 사용자 장비등록
+            $.ajax({
+                url  : "/equip/regEquipEnv",
+                type : "POST",
+                data : {
+                    "paramList": JSON.stringify(gridDtlList),
+                },
+
+                // contentType : "application/json;",
+                dataType: "json", // 응답 데이터 형식
+                success : function(data) {
+                    // 정상적으로 응답 받았을 경우에는 success 콜백이 호출되게 됩니다.
+                    // 이 콜백 함수의 파라미터에서는 응답 바디, 응답 코드 그리고 XHR 헤더를 확인할 수 있습니다.
+                    gridMst.resetData(data);
+                },
+                error	: function(xhr, status, error) {
+                    // 응답을 받지 못하였다거나 정상적인 응답이지만 데이터 형식을 확인할 수 없기 때문에
+                    // error 콜백이 호출될 수 있습니다.
+                    // 예를 들어, dataType을 지정해서 응답 받을 데이터 형식을 지정하였지만,
+                    // 서버에서는 다른 데이터형식으로 응답하면  error 콜백이 호출되게 됩니다.
+                },
+            })
+        })
     })
 </script>
 <body>

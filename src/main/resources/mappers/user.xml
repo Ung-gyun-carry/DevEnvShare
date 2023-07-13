@@ -34,7 +34,6 @@
           JOIN EQUIPMENTS_CATE
             ON EQUIPMENTS.EQUIP_CATE_NO = EQUIPMENTS_CATE.EQUIP_CATE_NO
          WHERE 1=1
-           AND ROWNUM &lt; 100
            <if test="equipCateNo != null and equipCateNo != ''">
            AND EQUIPMENTS.EQUIP_CATE_NO = #{equipCateNo}
            </if>
@@ -46,4 +45,11 @@
              , EQUIP_CATE_NM
           FROM EQUIPMENTS_CATE
     </select>
+
+    <insert id="regEquipEnv">
+        /* 장비환경등록 */
+        INSERT INTO EQUIP_ENV(EQUIP_ENV_NO , EQUIP_NO, USER_ID, CREATION_DATE, EQUIP_RATING, EQUIP_COMMENT)
+        VALUES((SELECT NVL(MAX(EQUIP_ENV_NO), 0) + 1 FROM EQUIP_ENV), #{EQUIP_NO}, #{USER_ID}
+              , SYSDATE, #{EQUIP_RATING, jdbcType=INTEGER}, #{EQUIP_COMMENT, jdbcType=VARCHAR})
+    </insert>
 </mapper>

@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.thymeleaf.util.MapUtils;
 import org.thymeleaf.util.StringUtils;
 
+import javax.servlet.http.HttpSession;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
@@ -29,7 +30,7 @@ public class UserService {
 
     private final CommonDao dao;
 
-    public Map<String, Object> loginUser(Map paramMap) {
+    public Map<String, Object> loginUser(HttpSession session, Map paramMap) {
         Map chkMap = dao.selectOne("user.loginUser", paramMap);
 
         Map resultMap = new HashMap();
@@ -46,6 +47,9 @@ public class UserService {
             } else {
                 resultMap.put("result", false);
             }
+
+            // 세션에 저장하기
+            session.setAttribute("USER", paramMap);
         }
 
         return resultMap;
@@ -65,14 +69,7 @@ public class UserService {
 
         paramMap.put("pw", encoder.encode(paramMap.get("pw").toString()));
         dao.insert("user.registUser", paramMap);
+
         return resultMap;
-    }
-
-    public List<Map<String, Object>> selectEquipCombo(Map paramMap) {
-        return dao.selectList("user.selectEquipCombo", paramMap);
-    }
-
-    public List<Map<String, Object>> selectEquipCateCombo(Map paramMap) {
-        return dao.selectList("user.selectEquipCateCombo", paramMap);
     }
 }

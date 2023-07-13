@@ -40,6 +40,6 @@ $(document).ready(function () {
     });
 
     $('#regDevEnvBtn').click(function () {
-        location.href = '/user/registerDevEnvForm';
+        location.href = '/equip/registerDevEnvForm';
     });
 })

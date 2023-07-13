@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import javax.servlet.http.HttpSession;
+
 @Slf4j
 @RequiredArgsConstructor
 @Controller
@@ -17,32 +19,15 @@ import lombok.extern.slf4j.Slf4j;
 public class UserController {
 
     private final UserService service;
-
     @GetMapping("/registerForm")
     public String registerForm() {
         return "/registerForm.html";
     }
 
-    @GetMapping("/registerDevEnvForm")
-    public String registerDevEnvForm(@RequestParam Map<String, Object> paramMap) {
-        return "/registerDevEnvForm.html";
-    }
-
-    @GetMapping("/selectEquipCateCombo")
-    @ResponseBody
-    public List<Map<String, Object>> selectEquipCateCombo(@RequestParam Map<String, Object> paramMap) {
-        return service.selectEquipCateCombo(paramMap);
-    }
-    @GetMapping("/selectEquipCombo")
-    @ResponseBody
-    public List<Map<String, Object>> selectEquipCombo(@RequestParam Map<String, Object> paramMap) {
-        return service.selectEquipCombo(paramMap);
-    }
-
     @PostMapping("/loginUser")
     @ResponseBody
-    public Map<String, Object> loginUser(@RequestParam Map<String, Object> paramMap) {
-        return service.loginUser(paramMap);
+    public Map<String, Object> loginUser(HttpSession session, @RequestParam Map<String, Object> paramMap) {
+        return service.loginUser(session, paramMap);
     }
 
     @PostMapping("/registUser")
